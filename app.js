@@ -1,3 +1,20 @@
+//#region Element references
+const btnRock = document.getElementById("btnRock");
+const btnPaper = document.getElementById("btnPaper");
+const btnScissors = document.getElementById("btnScissors");
+const scorePlayer = document.getElementById("scorePlayer");
+const scoreComputer = document.getElementById("scoreComputer");
+const gameOverEl = document.getElementById("gameOver");
+const roundInfoEl = document.getElementById("roundInfo");
+const restartButton = document.getElementById("restartButton");
+//#endregion
+
+//#region Variables
+let score = [0, 0];
+let done = false;
+//#endregion
+
+//#region Game logic
 function getComputerChoice() {
   const random = Math.random();
   let result = "scissors";
@@ -6,10 +23,12 @@ function getComputerChoice() {
   return result;
 }
 
-function getPlayerChoice() {
-  let result = prompt("Pick one: Rock, Paper, Scissors", "rock");
+function getPlayerChoice(choice) {
+  let result;
+  if (choice) result = choice;
+  else result = prompt("Pick one: Rock, Paper, Scissors", "rock");
   result = result.trim().toLowerCase();
-  if (result !== "rock" || result !== "paper" || result !== "scissors") result = "rock";
+  if (result !== "rock" && result !== "paper" && result !== "scissors") result = "rock";
   return result;
 }
 
@@ -40,6 +59,14 @@ function getWinner(choice1, choice2) {
   return winner;
 }
 
+function handleScore(result) {
+  const scoreIndex = result[1] - 1;
+  if (scoreIndex < 0 && scoreIndex > score.length) return;
+  score[scoreIndex] += 1;
+}
+//#endregion
+
+//#region Game
 function play(choice1, choice2) {
   let winner = getWinner(choice1, choice2);
   let result = "Draw! Both chosen " + choice1;
@@ -50,25 +77,36 @@ function play(choice1, choice2) {
   }
   return [result, winner];
 }
+//#endregion
 
-let score = [0, 0];
-function game() {
-  let result;
-  for (let i = 0; i < 5; i++) {
-    console.log("Round " + (i + 1));
-    const result = play(getPlayerChoice(), getComputerChoice());
-    console.log(result[0]);
-    const scoreIndex = result[1] - 1;
-    score[scoreIndex] += 1;
-    console.log("");
-  }
-  result = "Draw! Scores: " + score[0] + " - " + score[1] + " of 5 rounds";
-  if (score[0] > score[1]) {
-    result = "You win by " + score[0] + " - " + score[1] + " of 5 rounds";
-  } else {
-    result = "You lose by " + score[1] + " - " + score[0] + " of 5 rounds";
-  }
-  return result;
+//#region UI logic
+function updateUI(score, roundResult, done) {
+  scorePlayer.textContent = score[0];
+  scoreComputer.textContent = score[1];
+  roundInfoEl.textContent = roundResult ? roundResult[0] : "Choose one";
+  gameOverEl.style.display = done ? "flex" : "none";
 }
+//#endregion
 
-console.log("Final result: " + game());
+//#region Event handlers
+function clickHandler(choice) {
+  if (done) return;
+  const roundResult = play(getPlayerChoice(choice), getComputerChoice());
+  handleScore(roundResult);
+  if (score[0] >= 5 || score[1] >= 5) {
+    done = true;
+  }
+  updateUI(score, roundResult, done);
+}
+//#endregion
+
+//#region Event subscription
+btnRock.addEventListener("click", clickHandler.bind(null, "rock"));
+btnPaper.addEventListener("click", clickHandler.bind(null, "paper"));
+btnScissors.addEventListener("click", clickHandler.bind(null, "scissors"));
+restartButton.addEventListener("click", () => {
+  score = [0, 0];
+  done = false;
+  updateUI(score, null, done);
+});
+//#endregion

@@ -4,7 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rock Paper Scissors</title>
-    <script src="app.js"></script>
+    <script src="app.js" defer></script>
+    <style>
+      .button {
+        padding: 1.5rem;
+        flex: 1;
+      }
+    </style>
   </head>
-  <body></body>
+  <body>
+    <div style="display: flex; margin: 0.5rem auto; flex-direction: column; align-items: center">
+      <h1>Rock, Paper, Scissors</h1>
+      <div style="display: flex; justify-content: space-between; width: 50%; text-align: center; border: 1px solid #000">
+        <div style="flex: 1; border-right: 1px solid #000">
+          <h2 style="border-bottom: 1px solid #000">Player</h2>
+          <h3 id="scorePlayer">0</h3>
+        </div>
+        <div style="flex: 1">
+          <h2 style="border-bottom: 1px solid #000">Computer</h2>
+          <h3 id="scoreComputer">0</h3>
+        </div>
+      </div>
+      <h1 id="roundInfo" style="display: flex; flex-direction: column">Choose one</h1>
+      <div id="gameOver" style="display: none; flex-direction: column">
+        <h1>Game Over</h1>
+        <button id="restartButton" style="padding: 1.75rem">Click to restart</button>
+      </div>
+    </div>
+    <div style="display: flex; gap: 0.75rem; margin: 0 30rem">
+      <button id="btnRock" class="button">Rock</button>
+      <button id="btnPaper" class="button">Paper</button>
+      <button id="btnScissors" class="button">Scissors</button>
+    </div>
+  </body>
 </html>
